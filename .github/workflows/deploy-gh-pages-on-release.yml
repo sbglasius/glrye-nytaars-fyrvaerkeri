@@ -33,8 +33,8 @@ jobs:
           npm ci
           npm run build
 
-          if [ -d build ]; then
-            BUILD_DIR=build
+          if [ -d dist ]; then
+            BUILD_DIR=dist
           fi
 
           if [ -z "$BUILD_DIR" ]; then
