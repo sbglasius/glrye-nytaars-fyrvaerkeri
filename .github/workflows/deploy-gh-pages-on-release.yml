@@ -29,22 +29,13 @@ jobs:
         name: Prepare site and determine publish directory
         run: |
           BUILD_DIR=""
-          # If package.json exists and has a build script, run npm ci && npm run build
-          if [ -f package.json ]; then
-            node -e "process.exit(!(require('./package.json').scripts && require('./package.json').scripts.build))" && {
-              echo "🏗️ Found build script - installing and building..."
-              npm ci
-              npm run build
-            } || echo "No build script found or build skipped"
-          fi
+          echo "🏗️ Installing and building..."
+          npm ci
+          npm run build
 
-          # Detect common build output directories
-          for d in build dist public; do
-            if [ -d "$d" ]; then
-              BUILD_DIR=$d
-              break
-            fi
-          done
+          if [ -d build ]; then
+            BUILD_DIR=build
+          fi
 
           if [ -z "$BUILD_DIR" ]; then
             BUILD_DIR="."
@@ -53,7 +44,7 @@ jobs:
           echo "build_dir=$BUILD_DIR" >> $GITHUB_OUTPUT
           echo "Working dir"
           ls -la . 
-          echo "Build dir"
+          echo "Build dir $BUILD_DIR"
           ls -la $BUILD_DIR
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
