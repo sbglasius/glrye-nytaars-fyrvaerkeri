@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
 
       - id: prepare
         name: Prepare site and determine publish directory
@@ -32,7 +32,7 @@ jobs:
           # If package.json exists and has a build script, run npm ci && npm run build
           if [ -f package.json ]; then
             node -e "process.exit(!(require('./package.json').scripts && require('./package.json').scripts.build))" && {
-              echo "Found build script - installing and building..."
+              echo "🏗️ Found build script - installing and building..."
               npm ci
               npm run build
             } || echo "No build script found or build skipped"
@@ -51,7 +51,10 @@ jobs:
           fi
 
           echo "build_dir=$BUILD_DIR" >> $GITHUB_OUTPUT
-
+          echo "Working dir"
+          ls -la . 
+          echo "Build dir"
+          ls -la $BUILD_DIR
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
