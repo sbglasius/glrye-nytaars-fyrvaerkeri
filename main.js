@@ -54,11 +54,11 @@ const buildings = [
 const styles = {
     red: (opacity = 0.1) => new Style({
         fill: new Fill({color: `rgba(255,0,0,${opacity})`}),
-        stroke: new Stroke({color: 'red', width: 2})
+        stroke: new Stroke({color: `rgba(255,0,0,${opacity+0.1})`, width: 2})
     }),
     blue: (opacity = 0.2) => new Style({
         fill: new Fill({color: `rgba(0,0,255,${opacity})`}),
-        stroke: new Stroke({color: 'blue', width: 2})
+        stroke: new Stroke({color: `rgba(0,0,255,${opacity})`, width: 2})
     }),
     hover: new Style({
         fill: new Fill({color: 'rgba(255,255,0,0.1)'}),
