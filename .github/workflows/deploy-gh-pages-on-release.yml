@@ -1,0 +1,59 @@
+name: Deploy to GitHub Pages on release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: deploy-gh-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - id: prepare
+        name: Prepare site and determine publish directory
+        run: |
+          BUILD_DIR=""
+          # If package.json exists and has a build script, run npm ci && npm run build
+          if [ -f package.json ]; then
+            node -e "process.exit(!(require('./package.json').scripts && require('./package.json').scripts.build))" && {
+              echo "Found build script - installing and building..."
+              npm ci
+              npm run build
+            } || echo "No build script found or build skipped"
+          fi
+
+          # Detect common build output directories
+          for d in build dist public; do
+            if [ -d "$d" ]; then
+              BUILD_DIR=$d
+              break
+            fi
+          done
+
+          if [ -z "$BUILD_DIR" ]; then
+            BUILD_DIR="."
+          fi
+
+          echo "build_dir=$BUILD_DIR" >> $GITHUB_OUTPUT
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ steps.prepare.outputs.build_dir }}
