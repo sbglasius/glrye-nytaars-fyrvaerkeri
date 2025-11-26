@@ -43,3 +43,20 @@ html, body {
 .address-item:hover {
     background: #f0f0f0;
 }
+
+/* Info box at bottom-right */
+#circle-info {
+    background: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    position: absolute;
+    right: 10px;
+    bottom: 50px; /* leave space for checkbox */
+    max-height: 60vh;
+    overflow-y: auto;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+
